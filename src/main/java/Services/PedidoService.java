@@ -27,6 +27,23 @@ public class PedidoService {
 
     }
 
+    public Clientes getClientebyId(String nif) {
+        Clientes cliente;
+
+        try {
+            transaction.begin();
+            Query buscarCliente = entityManager.createQuery("SELECT c FROM Clientes c WHERE c.nif = :nif");
+            cliente = (Clientes) buscarCliente.getSingleResult();
+            return cliente;
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+
+
+    }
+
     public boolean addPedido(Pedidos pedido) {
 
         /*ClienteService datoCliente = new ClienteService();

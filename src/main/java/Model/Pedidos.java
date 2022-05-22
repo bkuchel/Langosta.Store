@@ -16,6 +16,7 @@ public class Pedidos {
     @JoinColumn(name = "nif_cliente", referencedColumnName = "nif")
     private Clientes nifCliente;
 
+
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "codigo_articulo", referencedColumnName = "codigo")
     private Productos codigoArticulo;
@@ -99,6 +100,10 @@ public class Pedidos {
     }
 
     public void setProducto(Productos producto) {
+    }
+
+    public String getNombreCliente() {
+        return nifCliente.getNombre();
     }
 
 

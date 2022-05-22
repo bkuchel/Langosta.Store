@@ -33,6 +33,7 @@ public class Clientes {
     @Column(name = "descuento")
     private Integer descuento;
 
+
     public Clientes() { }
 
     public Clientes(String nif, String nombre, String email, String domicilio) {

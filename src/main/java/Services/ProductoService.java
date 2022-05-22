@@ -25,14 +25,6 @@ public class ProductoService {
 
     }
 
-    public Productos getProductoById(String codigo) {
-        transaction.begin();
-        Productos producto = entityManager.createQuery("SELECT p FROM Productos p WHERE p.codigo = :codigo", Productos.class).setParameter("codigo", codigo).getSingleResult();
-        transaction.commit();
-        return producto;
-    }
-
-
     public boolean addProducto(Productos producto) {
         try {
             transaction.begin();

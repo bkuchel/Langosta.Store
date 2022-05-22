@@ -26,13 +26,6 @@ public class ClienteService {
 
     }
 
-    public Clientes getClienteById(String nif) {
-        transaction.begin();
-        Clientes cliente = entityManager.createQuery("SELECT c FROM Clientes c WHERE c.nif = :nif", Clientes.class).setParameter("nif", nif).getSingleResult();
-        transaction.commit();
-        return cliente;
-    }
-
     public boolean addCliente(Clientes cliente) {
         try {
             transaction.begin();

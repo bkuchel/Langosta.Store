@@ -1,72 +1,114 @@
 package Controller;
 
-import Model.Clientes;
+import Model.*;
 import Services.ClienteService;
-import Model.Estandar;
-import Model.Premium;
-import View.ClienteView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 public class ClienteController {
+
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+
+    //Elementos del formulario
+    @FXML
+    TextField inputNifCliente;
+    @FXML
+    TextField inputNombre;
+    @FXML
+    TextField inputEmail;
+    @FXML
+    TextField inputDomicilio;
+    @FXML
+    Button btnGuardar;
+
+    // Elementos de la tabla de datos
+    @FXML
+    ObservableList<Clientes> clientes;
+    @FXML
+    TableView<Clientes> tablaClientes;
+    @FXML
+    TableColumn<Productos, String> colNiFCliente;
+    @FXML
+    TableColumn<Productos, String> colNombreCliente;
+    @FXML
+    TableColumn<Productos, String> colEmail;
+    @FXML
+    TableColumn<Productos, String> colDomicilio;
+    @FXML
+    RadioButton radioEstandar, radioPremium;
+
+
     ClienteService bbdd = new ClienteService();
-    ClienteView menuCliente = new ClienteView();
 
-    Main volver = new Main();
+    public void nuevoCliente() {
+        if(radioEstandar.isSelected()){
+            Estandar estandar = new Estandar();
+            estandar.setNif(inputNifCliente.getText());
+            estandar.setNombre(inputNombre.getText());
+            estandar.setEmail(inputEmail.getText());
+            estandar.setDomicilio(inputDomicilio.getText());
+            bbdd.addCliente(estandar);
+            verClientes();
 
-    public void subMenu() {
-
-        int opcion = menuCliente.mostrarMenu();
-
-        switch (opcion) {
-            case 1:
-                nuevoEstandar();
-                subMenu();
-                break;
-            case 2:
-                nuevoPremium();
-                subMenu();
-                break;
-            case 3:
-                verClientes();
-                subMenu();
-            case 4:
-                volver.inicio();
-            default:
-                System.out.println("*** OPCION NO DISPONIBLE ***\n");
-                subMenu();
-
+        } else {
+            Premium premium = new Premium();
+            premium.setNif(inputNifCliente.getText());
+            premium.setNombre(inputNombre.getText());
+            premium.setEmail(inputEmail.getText());
+            premium.setDomicilio(inputDomicilio.getText());
+            bbdd.addCliente(premium);
+            verClientes();
         }
     }
 
-    public void nuevoEstandar() {
-        Estandar estandar = new Estandar();
 
-        List parametros = menuCliente.lecturaCliente();
-        estandar.setNif(parametros.get(0).toString());
-        estandar.setNombre(parametros.get(1).toString());
-        estandar.setEmail(parametros.get(2).toString());
-        estandar.setDomicilio(parametros.get(3).toString());
-        bbdd.addCliente(estandar);
+    public void volver(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("MenuView.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void nuevoPremium() {
-        Premium premium = new Premium();
+    public void checkIsEmpty() {
+        boolean isDisabled = (
+                inputNifCliente.getText().isEmpty() ||
+                inputNombre.getText().isEmpty() ||
+                inputDomicilio.getText().isEmpty() ||
+                inputEmail.getText().isEmpty());
+        btnGuardar.setDisable(isDisabled);
 
-        List parametros = menuCliente.lecturaCliente();
-        premium.setNif(parametros.get(0).toString());
-        premium.setNombre(parametros.get(1).toString());
-        premium.setEmail(parametros.get(2).toString());
-        premium.setDomicilio(parametros.get(3).toString());
-        bbdd.addCliente(premium);
     }
 
 
     public void verClientes() {
-        List<Clientes> datos = new ArrayList<Clientes>();
-        datos = bbdd.getClientes();
-        menuCliente.mostrarClientes(datos);
+        List<Clientes> clientesList;
+        clientesList = bbdd.getClientes();
+        clientes = FXCollections.observableArrayList(clientesList);
+        colNiFCliente.setCellValueFactory(new PropertyValueFactory<>("nif"));
+        colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colDomicilio.setCellValueFactory(new PropertyValueFactory<>("domicilio"));
+       tablaClientes.setItems(clientes);
+    }
+
+    public void initialize() {
+        btnGuardar.setDisable(true);
+        verClientes();
     }
 
 

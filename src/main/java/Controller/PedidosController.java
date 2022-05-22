@@ -4,59 +4,110 @@ import Model.Clientes;
 import Model.Pedidos;
 import Model.Productos;
 import Services.PedidoService;
-import View.PedidosView;
 
+import java.io.IOException;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
 public class PedidosController {
+
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+
+    //Elementos del formulario
+    @FXML
+    TextField inputNifCliente;
+    @FXML
+    TextField inputCodProducto;
+    @FXML
+    TextField inputCantidad;
+    @FXML
+    Button btnGuardar;
+
+    // Elementos de la tabla de datos
+    @FXML
+    ObservableList<Pedidos> pedidos;
+    @FXML
+    TableView<Pedidos> tablaPedidos;
+    @FXML
+    TableColumn<Productos, Integer> colCodigo;
+    @FXML
+    TableColumn<Productos, String> colNIFCliente;
+    @FXML
+    TableColumn<Productos, Float> colArticulo;
+    @FXML
+    TableColumn<Productos, Float> colCantidad;
+
+
     PedidoService bbdd = new PedidoService();
-    PedidosView menuPedido = new PedidosView();
 
-    public void subMenu() {
-        PedidosView menuPedidos = new PedidosView();
-        int opcion = menuPedidos.mostrarMenu();
+    public void volver(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("MenuView.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
-        switch (opcion) {
-            case 1:
-                nuevoPedido();
-                subMenu();
-                break;
-            case 2:
-                verPedidos();
-                subMenu();
-                break;
-            case 3:
-                Main volver = new Main();
-                volver.inicio();
-            default:
-                System.out.println("*** OPCION NO DISPONIBLE ***\n");
-                subMenu();
+    public void checkIsEmpty() {
+       boolean isDisabled = (
+       inputNifCliente.getText().isEmpty() ||
+       inputCodProducto.getText().isEmpty() ||
+       inputCantidad.getText().isEmpty());
+       btnGuardar.setDisable(isDisabled);
 
-        }
     }
 
     public void nuevoPedido() {
-        Pedidos pedido = new Pedidos();
-        Clientes cliente = new Clientes();
-        Productos producto = new Productos();
+            Pedidos pedido = new Pedidos();
+            Clientes cliente = new Clientes();
+            Productos producto = new Productos();
 
+            cliente.setNif(inputNifCliente.getText());
+            producto.setCodigo(Integer.parseInt(inputCodProducto.getText()));
 
+            pedido.setCliente(cliente);
+            pedido.setCodigoArticulo(producto);
+            pedido.setCantidad(Integer.parseInt(inputCantidad.getText()));
 
-        List parametros = menuPedido.lecturaPedido();
-        cliente.setNif(parametros.get(0).toString());
-        producto.setCodigo((Integer) parametros.get(1));
-
-
-        pedido.setCliente(cliente);
-        pedido.setCodigoArticulo(producto);
-        pedido.setCantidad(Integer.parseInt((String) parametros.get(2)));
-        //pedido.setNifCliente();
-        bbdd.addPedido(pedido);
+            bbdd.addPedido(pedido);
+            borrarForm();
+            btnGuardar.setDisable(true);
+            verPedidos();
         }
 
+    public void borrarForm () {
+        inputNifCliente.setText(null);
+        inputCodProducto.setText(null);
+        inputCantidad.setText(null);
+    }
+
     public void verPedidos() {
-        List<Pedidos> datos = bbdd.getPedidos();
-        menuPedido.mostrarPedidos(datos);
+        List<Pedidos> pedidosList;
+        pedidosList = bbdd.getPedidos();
+        pedidos = FXCollections.observableArrayList(pedidosList);
+        colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        colNIFCliente.setCellValueFactory(new PropertyValueFactory<>("nifCliente"));
+        colArticulo.setCellValueFactory(new PropertyValueFactory<>("codigoArticulo"));
+        colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        tablaPedidos.setItems(pedidos);
+    }
+
+    public void initialize() {
+        btnGuardar.setDisable(true);
+        verPedidos();
     }
 
     }

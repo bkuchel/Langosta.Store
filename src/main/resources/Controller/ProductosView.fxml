@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProductosController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <AnchorPane prefHeight="598.0" prefWidth="828.0">
+      <children>
+         <ImageView fitHeight="61.0" fitWidth="63.0" layoutX="27.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../img/logoLangosta.png" />
+            </image>
+         </ImageView>
+         <Label layoutX="100.0" layoutY="39.0" text="Langosta.Store" textFill="#fb6100">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Label>
+         <TableView id="tablaProductos" fx:id="tablaProductos" layoutX="24.0" layoutY="307.0" prefHeight="269.0" prefWidth="780.0">
+            <columns>
+               <TableColumn fx:id="colCodigo" prefWidth="66.0" text="Código" />
+               <TableColumn fx:id="colNombre" prefWidth="317.0" text="Nombre" />
+               <TableColumn fx:id="colPVP" prefWidth="96.0" text="PVP" />
+               <TableColumn fx:id="colGastosEnvio" prefWidth="136.0" text="Gastos de envío" />
+               <TableColumn fx:id="colTiempoPreparacion" prefWidth="163.0" text="Tiempo de preparación" />
+            </columns>
+         </TableView>
+         <TextField fx:id="inputProducto" layoutX="25.0" layoutY="222.0" onKeyReleased="#checkIsEmpty" />
+         <TextField fx:id="inputPVP" layoutX="192.0" layoutY="222.0" onKeyReleased="#checkIsEmpty" />
+         <TextField fx:id="inputGastosEnvio" layoutX="362.0" layoutY="222.0" onKeyReleased="#checkIsEmpty" />
+         <TextField fx:id="inputTiempoPreparacion" layoutX="531.0" layoutY="222.0" onKeyReleased="#checkIsEmpty" />
+         <Label layoutX="192.0" layoutY="206.0" text="Precio de venta" />
+         <Label layoutX="25.0" layoutY="206.0" text="Nombre del producto" />
+         <Label layoutX="362.0" layoutY="205.0" text="Gastos de envío" />
+         <Label layoutX="531.0" layoutY="205.0" text="Tiempo de preparación" />
+         <Button fx:id="btnGuardar" layoutX="701.0" layoutY="221.0" mnemonicParsing="false" onAction="#nuevoProducto" text="Crear producto" />
+         <Button layoutX="24.0" layoutY="110.0" mnemonicParsing="false" onAction="#volver" text="&lt; Volver al menú" />
+         <Label layoutX="358.0" layoutY="104.0" text="Productos">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Label>
+         <Separator layoutX="26.0" layoutY="185.0" prefHeight="3.0" prefWidth="780.0" />
+         <Label layoutX="26.0" layoutY="161.0" text="Crear nuevo producto">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
+         </Label>
+         <Separator layoutX="26.0" layoutY="298.0" prefHeight="3.0" prefWidth="780.0" />
+      </children>
+   </AnchorPane>
+</VBox>
